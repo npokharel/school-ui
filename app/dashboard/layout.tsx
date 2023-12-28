@@ -1,10 +1,41 @@
+"use client"
+
+import React from "react";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
+import { NextUIProvider } from "@nextui-org/react";
+import { SidebarContext } from "@/app/lib/context/layout-context";
+import { useLockedBody } from "@/app/lib/hooks/useBodyLock";
+import { NavbarWrapper } from "../ui/navbar/navbar";
+import { SidebarWrapper } from "../ui/sidebar/sidebar";
 export default function Layout({ children }: { children: React.ReactNode }) {
-    return (
-      <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
-        <div className="w-full flex-none md:w-64">
-          {/* <SideNav /> */}
-        </div>
-        <div className="flex-grow p-6 md:overflow-y-auto md:p-12">{children}</div>
-      </div>
-    );
-  }
+
+  const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [_, setLocked] = useLockedBody(false);
+  const handleToggleSidebar = () => {
+    setSidebarOpen(!sidebarOpen);
+    setLocked(!sidebarOpen);
+  };
+
+  return (
+    <NextThemesProvider defaultTheme="system" attribute="class">
+      <NextUIProvider>
+        {/*<Layout>*/}
+        {/*{children}*/}
+        {/*</Layout>*/}
+
+        <SidebarContext.Provider
+          value={{
+            collapsed: sidebarOpen,
+            setCollapsed: handleToggleSidebar,
+          }}
+        >
+          <section className="flex">
+            <SidebarWrapper />
+            <NavbarWrapper>{children}</NavbarWrapper>
+          </section>
+        </SidebarContext.Provider>
+
+      </NextUIProvider>
+    </NextThemesProvider>
+  );
+}
