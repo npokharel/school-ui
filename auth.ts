@@ -1,87 +1,52 @@
-import NextAuth from 'next-auth';
-import { authConfig } from './auth.config';
-import Credentials from 'next-auth/providers/credentials';
-import { User } from './app/lib/definitions';
-import { z } from 'zod';
+// "use server"
+import CredentialsProvider from "next-auth/providers/credentials";
+import NextAuth, { NextAuthConfig } from "next-auth";
+import { User } from "@/lib/store";
+// import { z } from 'zod';
 
-/*async function getUser(email: string, password: string): Promise<User | undefined> {
-    try {
-        // const user = await sql<User>`SELECT * FROM users WHERE email=${email}`;
-        // return user.rows[0];
-        console.log("get user ???")
-        let user;
-        fetch('http://nuptse.local:8080/api/v1/auth/authenticate', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify({ username: `${email}`, password: `${password}` }),
-        }).then((response) => response.json())
-            .then((data: any) => {
-                console.log(data);
-                // return data;
-                user = data;
-                return data;
-            })
-            .catch((error) => {
-                console.log('XXX :( :( :(')
-                console.error(error);
-            });
-            return user;
+export const config =  {
+  providers: [
+    CredentialsProvider({
+      // The name to display on the sign in form (e.g. "Sign in with...")
+      name: "Credentials",
+      // `credentials` is used to generate a form on the sign in page.
+      // You can specify which fields should be submitted, by adding keys to the `credentials` object.
+      // e.g. domain, username, password, 2FA token, etc.
+      // You can pass any HTML attribute to the <input> tag through the object.
+      credentials: {
+        username: { label: "Username", type: "text", placeholder: "jsmith" },
+        password: {  label: "Password", type: "password" }
+      },
 
-    } catch (error) {
-        console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.');
-    }
-}*/
-
-async function getUser(email: string, password: string): Promise<User | undefined> {
-    try {
-        console.log("get user ???");
-        const response = await fetch('http://nuptse.local:8080/api/v1/auth/authenticate', {
-            method: 'POST',
-            headers: {
-                'Content-type': 'application/json',
-            },
-            body: JSON.stringify({ username: email, password }),
-        });
-
-        if (!response.ok) {
-            throw new Error(`Failed to authenticate user. Status: ${response.status}`);
+      async authorize(credentials) {
+        console.log("inside credentials ", credentials)
+        const authResponse = await fetch("http://localhost:8080/api/v1/auth/authenticate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          /*body: JSON.stringify(credentials),*/
+          body: JSON.stringify({ username: 'admin@nuptse.io', password: 'admin@1' }),
+        })
+        if (!authResponse.ok) {
+          return null
         }
+        const user = await authResponse.json()
+        console.log("awaited user ", user)
+        return user
+      },
+    })
+  ],
+  pages: {
+    signIn: "/", //sigin page
+  },
+  callbacks: {
+    authorized({ request, auth }) {
+      const { pathname } = request.nextUrl
+      if (pathname === "/dashboard") return !!auth
+      return true
+    },
+  },
+} satisfies NextAuthConfig
 
-        const data = await response.json();
-
-        // Check if the response is empty or not valid JSON
-        if (Object.keys(data).length === 0) {
-            throw new Error('Empty or invalid JSON response');
-        }
-
-        console.log(data);
-        return data; // Assuming data is the user object.
-    } catch (error) {
-        console.error('Failed to fetch user:', error);
-        throw new Error('Failed to fetch user.');
-    }
-}
-
-export const { auth, signIn, signOut } = NextAuth({
-    ...authConfig,
-    providers: [
-      Credentials({
-        async authorize(credentials) {
-          const parsedCredentials = z
-            .object({ email: z.string().email(), password: z.string().min(6) })
-            .safeParse(credentials);
-   
-          if (parsedCredentials.success) {
-            const { email, password } = parsedCredentials.data;
-            const user = await getUser(email, password);
-            if (!user) return null;
-            return user;
-          }
-          return null;
-        },
-      }),
-    ],
-  });
+export const { handlers, auth, signIn, signOut } = NextAuth(config)

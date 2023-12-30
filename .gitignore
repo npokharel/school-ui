@@ -4,7 +4,6 @@
 /node_modules
 /.pnp
 .pnp.js
-.yarn/install-state.gz
 
 # testing
 /coverage
@@ -27,7 +26,11 @@ yarn-error.log*
 
 # local env files
 .env*.local
-.env
+
+#lock
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
 
 # vercel
 .vercel
@@ -36,5 +39,22 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# ide
+# ides
+### IntelliJ IDEA ###
 .idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
