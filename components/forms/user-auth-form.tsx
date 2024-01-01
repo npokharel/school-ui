@@ -17,9 +17,9 @@ import {
 import { useRouter, useSearchParams } from "next/navigation";
 import GoogleSignInButton from "../github-auth-button";
 import { signIn } from "next-auth/react";
-// import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-// import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-// import { authenticate } from "@/lib/actions";
+import { AuthError } from "next-auth";
+import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Enter a valid email address" }),
@@ -31,25 +31,32 @@ type UserFormValue = z.infer<typeof formSchema>;
 export default function UserAuthForm() {
   // const router = useRouter();
   // const [errorMessage, dispatch] = useFormState(authenticate, undefined);
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl");
-  const [loading, setLoading] = useState(false);
+  const searchParams = useSearchParams()
+  console.log("search params ", searchParams.get('error'))
+  const [ errorMessage, setErrorMessage] = useState("")
+  const callbackUrl = searchParams.get("callbackUrl")
+  const [loading, setLoading] = useState(false)
   const defaultValues = {
     email: "",
     password: ""
-  };
+  }
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues,
-  });
+  })
 
   const onSubmit = async (data: UserFormValue) => {
-    await signIn("credentials", {
-      email: data.email,
-      password: data.password,
-      callbackUrl: callbackUrl ?? "/dashboard",
-    });
-  };
+    try {
+      await signIn("credentials", {
+        email: data.email,
+        password: data.password,
+        callbackUrl: callbackUrl ?? "/dashboard",
+      });
+    }catch (error) {
+      if (error instanceof AuthError) {
+        console.log("errorsssss ===> ")
+      }
+    }}
 
   return (
     <>
@@ -96,7 +103,7 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           />
-          {/*{errorMessage && (
+          {searchParams.get('error') && (
             <Alert variant="destructive">
               <ExclamationTriangleIcon className="h-4 w-4" />
               <AlertTitle>Error</AlertTitle>
@@ -104,7 +111,7 @@ export default function UserAuthForm() {
                 Something might be wrong.
               </AlertDescription>
             </Alert>
-          )}*/}
+          )}
 
           <Button disabled={loading} className="ml-auto w-full" type="submit">
             Continue With Email

@@ -1,8 +1,5 @@
-// "use server"
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth, { NextAuthConfig } from "next-auth";
-// import { User } from "@/lib/store";
-// import { z } from 'zod';
 
 export const config =  {
   providers: [
@@ -13,10 +10,10 @@ export const config =  {
       // You can specify which fields should be submitted, by adding keys to the `credentials` object.
       // e.g. domain, username, password, 2FA token, etc.
       // You can pass any HTML attribute to the <input> tag through the object.
-      credentials: {
+      /*credentials: {
         username: { label: "Username", type: "text", placeholder: "jsmith" },
         password: {  label: "Password", type: "password" }
-      },
+      },*/
 
       async authorize(credentials) {
         console.log("inside credentials ", credentials)
@@ -25,8 +22,8 @@ export const config =  {
           headers: {
             "Content-Type": "application/json",
           },
-          /*body: JSON.stringify(credentials),*/
-          body: JSON.stringify({ username: 'admin@nuptse.io', password: 'admin@1' }),
+          // body: JSON.stringify(credentials),
+          body: JSON.stringify({ username: credentials.email, password: credentials.password }),
         })
         if (!authResponse.ok) {
           return null
