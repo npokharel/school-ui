@@ -1,7 +1,7 @@
 // "use server"
 import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth, { NextAuthConfig } from "next-auth";
-import { User } from "@/lib/store";
+// import { User } from "@/lib/store";
 // import { z } from 'zod';
 
 export const config =  {
@@ -46,6 +46,36 @@ export const config =  {
       if (pathname === "/dashboard") return !!auth
       return true
     },
+    async session({ session, token }) {
+      /*console.log("session callback")
+      console.log("session: "+JSON.stringify(session))
+      console.log("token: "+JSON.stringify(token))*/
+
+      // session.access_token = token.accessToken
+      //@ts-ignore
+      session.user = token.user
+
+      // console.log("session", session)
+      // Send properties to the client, like an access_token from a provider.
+      // session.user.access_token = token.accessToken
+      return { ...session }
+    },
+    // The arguments user, account, profile and isNewUser are only passed the first time this callback is called on a
+    // new session, after the user signs in. In subsequent calls, only token will be available.
+    async jwt({ token, user, account, isNewUser }) {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (account) {
+        /*console.log("jwt callback")
+        console.log("token: "+JSON.stringify(token))
+        console.log("user: "+JSON.stringify(user))
+        console.log("account: "+JSON.stringify(account))
+        console.log("isNewUser: "+JSON.stringify(isNewUser))*/
+
+        token.accessToken = account.access_token
+        token.user = user
+      }
+      return token
+    }
   },
 } satisfies NextAuthConfig
 
