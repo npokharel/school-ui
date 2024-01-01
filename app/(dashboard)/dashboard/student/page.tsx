@@ -45,7 +45,7 @@ export default async function page({ searchParams }: paramsProps) {
           />
 
           <Link
-            href={"/dashboard/employee/new"}
+            href={"/dashboard/student/new"}
             className={cn(buttonVariants({ variant: "default" }))}
           >
             <Plus className="mr-2 h-4 w-4" /> Add New

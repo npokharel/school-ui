@@ -3,7 +3,7 @@
 import { signIn } from '@/auth';
 import { signOut } from '@/auth';
 import { AuthError } from 'next-auth';
-
+import { auth } from "auth";
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
@@ -26,4 +26,9 @@ export async function authenticate(
 
 export async function logOut() {
   await signOut();
+}
+
+export async function getStudents() {
+  const session = await auth()
+
 }

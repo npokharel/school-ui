@@ -119,16 +119,16 @@ export const navItems: NavItem[] = [
     label: "Dashboard",
   },
   {
+    title: "Student",
+    href: "/dashboard/student",
+    icon: "employee",
+    label: "employee",
+  },
+  {
     title: "User",
     href: "/dashboard/user",
     icon: "user",
     label: "user",
-  },
-  {
-    title: "Employee",
-    href: "/dashboard/employee",
-    icon: "employee",
-    label: "employee",
   },
   {
     title: "Profile",
