@@ -111,6 +111,49 @@ export type Employee = {
   profile_picture?: string | null; // Profile picture can be a string (URL) or null (if no picture)
 };
 
+export type Student = {
+  id: number;
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  gender: string;
+  dob: string; // Assuming a string in ISO 8601 format for simplicity
+  image: string;
+  dobNp: string; // Assuming a string in ISO 8601 format for simplicity
+  community: string;
+  ethnicity: string;
+  religion: string;
+  nationality: string;
+  country: string;
+  province: string;
+  district: string;
+  municipality: string;
+  city: string;
+  mobile: string;
+  phone: string;
+  email: string;
+  address: string;
+  tempAddress: string;
+  admissionDate: string; // Assuming a string in ISO 8601 format for simplicity
+  admissionDateNp: string; // Assuming a string in ISO 8601 format for simplicity
+  batch: string;
+  group: string;
+  section: string;
+  registration: string;
+  roll: string;
+  studentType: string;
+  studentCategory: string;
+  fatherName: string;
+  fatherPhone: string;
+  motherName: string;
+  motherPhone: string;
+  guardianName: string;
+  guardianAddress: string;
+  guardianMobile: string;
+  guardianEmail: string;
+  guardianRelation: string;
+};
+
 export const navItems: NavItem[] = [
   {
     title: "Dashboard",
