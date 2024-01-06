@@ -22,7 +22,7 @@ export default function UserNav() {
           <Button variant="ghost" className="relative h-8 w-8 rounded-full">
             <Avatar className="h-8 w-8">
               <AvatarImage
-                src={session.user?.image ?? "avatars/user-blue.png"}
+                src={session.user?.image ?? "/avatars/user-blue.png"}
                 alt={session.user?.name ?? ""}
               />
               <AvatarFallback>{session.user?.name}</AvatarFallback>

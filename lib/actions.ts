@@ -30,5 +30,9 @@ export async function logOut() {
 
 export async function getStudents() {
   const session = await auth()
-
+  return await fetch(
+    `${process.env.API_URL}/student`, {
+      headers: {Authorization: `Bearer ${session?.user.access_token}`}
+    }
+  );
 }

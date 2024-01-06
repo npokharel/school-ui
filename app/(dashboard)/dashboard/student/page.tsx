@@ -1,15 +1,16 @@
 import BreadCrumb from "@/components/breadcrumb";
-import { columns } from "@/components/tables/employee-tables/columns";
+import { columns } from "@/components/tables/student-tables/columns";
 import { StudentTable } from "@/components/tables/student-tables/student-table";
 import { buttonVariants } from "@/components/ui/button";
 import { Heading } from "@/components/ui/heading";
 import { Separator } from "@/components/ui/separator";
-import { Employee } from "@/constants/data";
+import { Student } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { getStudents } from "@/lib/actions";
 
-const breadcrumbItems = [{ title: "User", link: "/dashboard/user" }];
+const breadcrumbItems = [{ title: "Student", link: "/dashboard/user" }];
 
 type paramsProps = {
   searchParams: {
@@ -22,17 +23,13 @@ export default async function page({ searchParams }: paramsProps) {
   const pageLimit = Number(searchParams.limit) || 10;
   const country = searchParams.search || null;
   const offset = (page - 1) * pageLimit;
-
-  const res = await fetch(
-    `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
-      (country ? `&search=${country}` : ""),
-  );
-  const employeeRes = await res.json();
-  console.log("employeeRes", employeeRes);
-  const totalUsers = employeeRes.total_users; //1000
+  const res = await getStudents()
+  const studentRes = await res.json();
+  console.log("employeeRes", studentRes);
+  const students: Student[] = studentRes.data;
+  const totalUsers = students?.length//studentRes.total; //1000
   const pageCount = Math.ceil(totalUsers / pageLimit);
-  const employee: Employee[] = employeeRes.users;
-  console.log("employee", employee);
+  // console.log("students", students);
   return (
     <>
       <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
@@ -40,8 +37,8 @@ export default async function page({ searchParams }: paramsProps) {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Employee (${totalUsers})`}
-            description="Manage users for your business"
+            title={`Student (${totalUsers})`}
+            description="Manage students for your school"
           />
 
           <Link
@@ -57,7 +54,7 @@ export default async function page({ searchParams }: paramsProps) {
           pageNo={page}
           columns={columns}
           totalUsers={totalUsers}
-          data={employee}
+          data={students}
           pageCount={pageCount}
         />
       </div>
