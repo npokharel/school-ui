@@ -25,11 +25,10 @@ export default async function page({ searchParams }: paramsProps) {
   const offset = (page - 1) * pageLimit;
   const res = await getStudents()
   const studentRes = await res.json();
-  console.log("employeeRes", studentRes);
+  console.log("studentRes", studentRes);
   const students: Student[] = studentRes.data;
   const totalUsers = students?.length//studentRes.total; //1000
   const pageCount = Math.ceil(totalUsers / pageLimit);
-  // console.log("students", students);
   return (
     <>
       <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">

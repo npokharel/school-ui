@@ -12,8 +12,9 @@ export default function Page() {
       <BreadCrumb items={breadcrumbItems} />
       <StudentForm
         categories={[
-          { _id: "shirts", name: "shirts" },
-          { _id: "pants", name: "pants" },
+          { _id: "m", name: "Male" },
+          { _id: "f", name: "Female" },
+          { _id: "o", name: "Others" },
         ]}
         initialData={null}
         key={null}

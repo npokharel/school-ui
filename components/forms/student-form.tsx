@@ -41,21 +41,22 @@ const ImgSchema = z.object({
 });
 export const IMG_MAX_LIMIT = 3;
 const formSchema = z.object({
-  name: z
+  firstname: z
     .string()
-    .min(3, { message: "Product Name must be at least 3 characters" }),
-  imgUrl: z
-    .array(ImgSchema)
-    .max(IMG_MAX_LIMIT, { message: "You can only add up to 3 images" })
-    .min(1, { message: "At least one image must be added." }),
-  description: z
-    .string()
-    .min(3, { message: "Product description must be at least 3 characters" }),
-  price: z.coerce.number(),
-  category: z.string().min(1, { message: "Please select a category" }),
+    .min(3, { message: "First Name must be at least 3 characters" }),
+  middlename: z
+    .string(),
+  lastname: z
+    .string(),
+  gender: z
+    .string(),
+  dob: z
+    .date(),
+  // price: z.coerce.number(),
+  // category: z.string().min(1, { message: "Please select a category" }),
 });
 
-type ProductFormValues = z.infer<typeof formSchema>;
+type StudentFormValues = z.infer<typeof formSchema>;
 
 interface StudentFormProps {
   initialData: any | null;
@@ -72,27 +73,27 @@ export const StudentForm: React.FC<StudentFormProps> = ({
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
-  const title = initialData ? "Edit product" : "Create product";
-  const description = initialData ? "Edit a product." : "Add a new product";
-  const toastMessage = initialData ? "Product updated." : "Product created.";
+  const title = initialData ? "Edit student" : "Create student";
+  const description = initialData ? "Edit a student." : "Add a new student";
+  const toastMessage = initialData ? "Student updated." : "Student created.";
   const action = initialData ? "Save changes" : "Create";
 
   const defaultValues = initialData
     ? initialData
     : {
-        name: "",
-        description: "",
-        price: 0,
-        imgUrl: [],
-        category: "",
+        firstname: "",
+        middlename: "",
+        lastname: "",
+        gender: "",
+        dob: null,
       };
 
-  const form = useForm<ProductFormValues>({
+  const form = useForm<StudentFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
-  const onSubmit = async (data: ProductFormValues) => {
+  const onSubmit = async (data: StudentFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
@@ -102,7 +103,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         // console.log("product", res);
       }
       router.refresh();
-      router.push(`/dashboard/products`);
+      router.push(`/dashboard/student`);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -132,7 +133,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
     }
   };
 
-  const triggerImgUrlValidation = () => form.trigger("imgUrl");
+  // const triggerImgUrlValidation = () => form.trigger("imgUrl");
 
   return (
     <>
@@ -161,7 +162,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
-          <FormField
+          {/*<FormField
             control={form.control}
             name="imgUrl"
             render={({ field }) => (
@@ -177,18 +178,18 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                 <FormMessage />
               </FormItem>
             )}
-          />
+          />*/}
           <div className="md:grid md:grid-cols-3 gap-8">
             <FormField
               control={form.control}
-              name="name"
+              name="firstname"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel>First Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Product name"
+                      placeholder="First name"
                       {...field}
                     />
                   </FormControl>
@@ -198,14 +199,14 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             />
             <FormField
               control={form.control}
-              name="description"
+              name="middlename"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Middle Name</FormLabel>
                   <FormControl>
                     <Input
                       disabled={loading}
-                      placeholder="Product description"
+                      placeholder="Middle Name"
                       {...field}
                     />
                   </FormControl>
@@ -215,12 +216,16 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             />
             <FormField
               control={form.control}
-              name="price"
+              name="lastname"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel>Last Name</FormLabel>
                   <FormControl>
-                    <Input type="number" disabled={loading} {...field} />
+                    <Input
+                      disabled={loading}
+                      placeholder="Last Name"
+                      {...field}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -228,10 +233,10 @@ export const StudentForm: React.FC<StudentFormProps> = ({
             />
             <FormField
               control={form.control}
-              name="category"
+              name="gender"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Category</FormLabel>
+                  <FormLabel>Gender</FormLabel>
                   <Select
                     disabled={loading}
                     onValueChange={field.onChange}
@@ -242,7 +247,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                       <SelectTrigger>
                         <SelectValue
                           defaultValue={field.value}
-                          placeholder="Select a category"
+                          placeholder="Select a Gender"
                         />
                       </SelectTrigger>
                     </FormControl>
