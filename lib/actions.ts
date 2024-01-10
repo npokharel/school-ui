@@ -36,3 +36,26 @@ export async function getStudents() {
     }
   );
 }
+
+export async function addStudent(data : FormData) {
+  console.log("data", data)
+  const session = await auth()
+  /*return await fetch(
+    `${process.env.API_URL}/student`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session?.user.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: data
+    }
+  );*/
+  return await fetch(`${process.env.API_URL}/student`,{
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${session?.user.access_token}`,
+    }
+  })
+}

@@ -7,15 +7,17 @@ export default function Page() {
     { title: "Student", link: "/dashboard/student" },
     { title: "Create", link: "/dashboard/student/create" },
   ];
+  /*const initialData = {
+    firstname: "ram",
+    middlename: "prasad",
+    lastname: "mudbari",
+    gender: "f",
+    dob: "2022/02/01"
+  }*/
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />
       <StudentForm
-        categories={[
-          { _id: "m", name: "Male" },
-          { _id: "f", name: "Female" },
-          { _id: "o", name: "Others" },
-        ]}
         initialData={null}
         key={null}
       />

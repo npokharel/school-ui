@@ -29,6 +29,13 @@ import { Checkbox } from "@/components/ui/checkbox";
 // import FileUpload from "@/components/FileUpload";
 import { useToast } from "../ui/use-toast";
 import FileUpload from "../file-upload";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { CalendarIcon } from "@radix-ui/react-icons";
+import { Calendar } from "@/components/ui/calendar";
+import { addStudent } from "@/lib/actions";
 const ImgSchema = z.object({
   fileName: z.string(),
   name: z.string(),
@@ -52,6 +59,10 @@ const formSchema = z.object({
     .string(),
   dob: z
     .date(),
+  image: z
+    .array(ImgSchema)
+    .max(IMG_MAX_LIMIT, { message: "You can only add up to 3 images" })
+    .min(1, { message: "At least one image must be added." }),
   // price: z.coerce.number(),
   // category: z.string().min(1, { message: "Please select a category" }),
 });
@@ -60,13 +71,10 @@ type StudentFormValues = z.infer<typeof formSchema>;
 
 interface StudentFormProps {
   initialData: any | null;
-  categories: any;
+  categories?: any;
 }
 
-export const StudentForm: React.FC<StudentFormProps> = ({
-  initialData,
-  categories,
-}) => {
+export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -81,12 +89,13 @@ export const StudentForm: React.FC<StudentFormProps> = ({
   const defaultValues = initialData
     ? initialData
     : {
-        firstname: "",
-        middlename: "",
-        lastname: "",
-        gender: "",
-        dob: null,
-      };
+      firstname: "",
+      middlename: "",
+      lastname: "",
+      gender: "",
+      dob: null,
+      image: [],
+    };
 
   const form = useForm<StudentFormValues>({
     resolver: zodResolver(formSchema),
@@ -97,19 +106,34 @@ export const StudentForm: React.FC<StudentFormProps> = ({
     try {
       setLoading(true);
       if (initialData) {
+        console.log("!submit data", data)
         // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
       } else {
         // const res = await axios.post(`/api/products/create-product`, data);
         // console.log("product", res);
+        data = JSON.parse(JSON.stringify(data))
+        console.log("submit data", data)
+        const res = await addStudent(data);
+        //const res = await addStudent(data)
+        console.log("res ", res)
+        if(res.ok) {
+          toast({
+            variant: "default",
+            title: "Success.",
+            description: "New Student added.",
+          });
+          router.refresh();
+          router.push(`/dashboard/student`);
+        }
       }
-      router.refresh();
-      router.push(`/dashboard/student`);
-      toast({
+
+      /*toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: "There was a problem with your request.",
-      });
+      });*/
     } catch (error: any) {
+      console.log("the error ", error.message)
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -162,23 +186,6 @@ export const StudentForm: React.FC<StudentFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
-          {/*<FormField
-            control={form.control}
-            name="imgUrl"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <FileUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                    onRemove={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />*/}
           <div className="md:grid md:grid-cols-3 gap-8">
             <FormField
               control={form.control}
@@ -231,7 +238,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                 </FormItem>
               )}
             />
-            <FormField
+            {/*<FormField
               control={form.control}
               name="gender"
               render={({ field }) => (
@@ -252,7 +259,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {/* @ts-ignore  */}
+                       @ts-ignore
                       {categories.map((category) => (
                         <SelectItem key={category._id} value={category._id}>
                           {category.name}
@@ -262,8 +269,116 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                   </Select>
                   <FormMessage />
                 </FormItem>
+
+              )}
+            />*/}
+            <FormField
+              control={form.control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Gender</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-row space-y-1"
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="m" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Male
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="f" />
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          Female
+                        </FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="o" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Other</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
             />
+            <FormField
+              control={form.control}
+              name="dob"
+              render={({ field }) => (
+                <FormItem className="flex flex-col">
+                  <FormLabel>Date of birth</FormLabel>
+                  {/*@ts-ignore*/}
+                  <Popover key={field?.value}>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-[240px] pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        defaultMonth={field.value}
+                        captionLayout="dropdown-buttons"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        fromYear={1960}
+                        toYear={2030}
+                        /*disabled={(date) =>
+                          date > new Date() || date < new Date("1900-01-01")
+                        }*/
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormDescription>
+                    Your date of birth is used to calculate your age.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Images</FormLabel>
+                <FormControl>
+                  <FileUpload
+                    onChange={field.onChange}
+                    value={field.value}
+                    onRemove={field.onChange}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
