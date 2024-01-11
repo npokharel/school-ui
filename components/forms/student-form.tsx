@@ -18,16 +18,8 @@ import {
 } from "@/components/ui/form";
 import { Separator } from "@/components/ui/separator";
 import { Heading } from "@/components/ui/heading";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-// import FileUpload from "@/components/FileUpload";
 import { useToast } from "../ui/use-toast";
+import { useSession} from "next-auth/react";
 import FileUpload from "../file-upload";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -35,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { Calendar } from "@/components/ui/calendar";
-import { addStudent } from "@/lib/actions";
+
 const ImgSchema = z.object({
   fileName: z.string(),
   name: z.string(),
@@ -85,6 +77,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
   const description = initialData ? "Edit a student." : "Add a new student";
   const toastMessage = initialData ? "Student updated." : "Student created.";
   const action = initialData ? "Save changes" : "Create";
+  const { data: session } = useSession()
 
   const defaultValues = initialData
     ? initialData
@@ -112,8 +105,18 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
         // const res = await axios.post(`/api/products/create-product`, data);
         // console.log("product", res);
         data = JSON.parse(JSON.stringify(data))
-        console.log("submit data", data)
-        const res = await addStudent(data);
+       // console.log("submit data", data)
+        // const res = await addStudent(data);
+
+        const res = await fetch(`http://localhost:8080/api/v1/student`,{
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'content-type': 'application/json',
+            Authorization: `Bearer ${session?.user.access_token}`,
+          }
+        })
+
         //const res = await addStudent(data)
         console.log("res ", res)
         if(res.ok) {

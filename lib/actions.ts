@@ -59,3 +59,19 @@ export async function addStudent(data : FormData) {
     }
   })
 }
+
+export async function fetchStudentById(id: string) {
+  const session = await auth()
+  console.log("in here", id)
+  try {
+    const data = await fetch (`${process.env.API_URL}/student/${id}`,{
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${session?.user.access_token}`,
+      }
+    })
+
+  }catch (error) {
+    console.log("API fetch error", error)
+  }
+}
