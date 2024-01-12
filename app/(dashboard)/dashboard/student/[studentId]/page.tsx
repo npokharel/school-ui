@@ -2,15 +2,24 @@ import BreadCrumb from "@/components/breadcrumb";
 import { StudentForm } from "@/components/forms/student-form";
 import React from "react";
 import { fetchStudentById } from "@/lib/actions";
-
-export default async function Page({ params }: { params: { id: string } }) {
+import { Student } from "@/constants/data";
+export default async function Page({ params }: { params: { studentId: number } }) {
   const breadcrumbItems = [
     { title: "Student", link: "/dashboard/student" },
     { title: "Create", link: "/dashboard/student/create" },
   ];
-  const id = params.id
-  const student = await fetchStudentById(id)
-  console.log('id', id)
+  const id = params.studentId
+  const res = await fetchStudentById(id)
+  // @ts-ignore
+  const studentRes = await res.json();
+  const student : Student = studentRes.data
+  if(student){
+    // @ts-ignore
+    student.image = [student?.image]
+    student.dob = new Date(student.dob)
+  }
+
+  console.log("student ", student)
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
       <BreadCrumb items={breadcrumbItems} />

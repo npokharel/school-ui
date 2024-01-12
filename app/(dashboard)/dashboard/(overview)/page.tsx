@@ -1,5 +1,5 @@
 import { CalendarDateRangePicker } from "@/components/date-range-picker";
-import { Overview } from "@/components/overview";
+import { Overview }  from "@/components/overview";
 import { RecentSales } from "@/components/recent-sales";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Suspense } from "react";
+import {DashboardSkeleton} from "@/components/skeletons/DashboardSkeleton";
 
 export default function page() {
   return (
@@ -141,7 +143,9 @@ export default function page() {
                   <CardTitle>Overview</CardTitle>
                 </CardHeader>
                 <CardContent className="pl-2">
-                  <Overview />
+                  <Suspense fallback={<DashboardSkeleton/>}>
+                    <Overview />
+                  </Suspense>
                 </CardContent>
               </Card>
               <Card className="col-span-4 md:col-span-3">
@@ -156,7 +160,7 @@ export default function page() {
                 </CardContent>
               </Card>
             </div>
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
+            {/*<div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-7">
               <Card className="col-span-4">
                 <CardHeader>
                   <CardTitle>Overview</CardTitle>
@@ -176,7 +180,7 @@ export default function page() {
                   <RecentSales />
                 </CardContent>
               </Card>
-            </div>
+            </div>*/}
           </TabsContent>
         </Tabs>
       </div>

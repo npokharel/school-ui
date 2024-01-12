@@ -3,8 +3,8 @@ import Sidebar from "@/components/layout/sidebar";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "SchoolMS Dashboard ",
-  description: "Basic dashboard with Next.js and Shadcn",
+  title: "SchoolMS",
+  description: "School Management System Dashboard",
 };
 
 export default function DashboardLayout({

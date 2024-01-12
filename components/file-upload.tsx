@@ -10,7 +10,7 @@ import { useToast } from "./ui/use-toast";
 
 interface ImageUploadProps {
   onChange?: any;
-  onRemove: (value: UploadFileResponse[]) => void;
+  onRemove: (value: UploadFileResponse[] | UploadFileResponse) => void;
   value: UploadFileResponse[];
 }
 
@@ -28,19 +28,21 @@ export default function FileUpload({
   const onUpdateFile = (newFiles: UploadFileResponse[]) => {
     onChange([...value, ...newFiles]);
   };
+  // console.log("the value image ", value)
   return (
     <div>
       <div className="mb-4 flex items-center gap-4">
         {!!value.length &&
           value?.map((item) => (
             <div
-              key={item.key}
+              // @ts-ignore
+              key={item.key || item.fileKey}
               className="relative w-[200px] h-[200px] rounded-md overflow-hidden"
             >
               <div className="z-10 absolute top-2 right-2">
                 <Button
                   type="button"
-                  onClick={() => onDeleteFile(item.key)}
+                  onClick={() => onDeleteFile(item.key || item.fileKey)}
                   variant="destructive"
                   size="sm"
                 >

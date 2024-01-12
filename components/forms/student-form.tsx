@@ -30,31 +30,30 @@ import { Calendar } from "@/components/ui/calendar";
 
 const ImgSchema = z.object({
   fileName: z.string(),
-  name: z.string(),
+  name: z.string().optional(),
   fileSize: z.number(),
-  size: z.number(),
+  size: z.number().optional(),
   fileKey: z.string(),
-  key: z.string(),
+  key: z.string().optional(),
   fileUrl: z.string(),
-  url: z.string(),
+  url: z.string().optional(),
 });
 export const IMG_MAX_LIMIT = 3;
 const formSchema = z.object({
   firstname: z
     .string()
     .min(3, { message: "First Name must be at least 3 characters" }),
-  middlename: z
-    .string(),
-  lastname: z
-    .string(),
-  gender: z
-    .string(),
-  dob: z
-    .date(),
+  middlename: z.string().optional(),
+  lastname: z.string(),
+  gender: z.string(),
+  dob: z.date(),
   image: z
     .array(ImgSchema)
     .max(IMG_MAX_LIMIT, { message: "You can only add up to 3 images" })
     .min(1, { message: "At least one image must be added." }),
+  community: z.string().optional(),
+  ethnicity: z.string().optional(),
+  religion: z.string().optional()
   // price: z.coerce.number(),
   // category: z.string().min(1, { message: "Please select a category" }),
 });
@@ -95,17 +94,19 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
     defaultValues,
   });
 
+  console.log("initial data ", initialData)
+
   const onSubmit = async (data: StudentFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
-        console.log("!submit data", data)
+        console.log("!update submit data", data)
         // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
       } else {
         // const res = await axios.post(`/api/products/create-product`, data);
         // console.log("product", res);
         data = JSON.parse(JSON.stringify(data))
-       // console.log("submit data", data)
+        console.log("submit data", data)
         // const res = await addStudent(data);
 
         const res = await fetch(`http://localhost:8080/api/v1/student`,{
@@ -365,22 +366,74 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
               )}
             />
             <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Images</FormLabel>
-                <FormControl>
-                  <FileUpload
-                    onChange={field.onChange}
-                    value={field.value}
-                    onRemove={field.onChange}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Image</FormLabel>
+                  <FormControl>
+                    <FileUpload
+                      onChange={field.onChange}
+                      //@ts-ignore
+                      value={field.value}
+                      onRemove={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="community"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Community</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Community"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="ethnicity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Ethnicity</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Ethnicity"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="religion"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Religion</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Religion"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">

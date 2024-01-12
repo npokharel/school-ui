@@ -111,14 +111,24 @@ export type Employee = {
   profile_picture?: string | null; // Profile picture can be a string (URL) or null (if no picture)
 };
 
+export type Image = {
+  id: number
+  createdAt: string,
+  updatedAt: string
+  imageKey: string
+  name: string
+  size: number
+  url: string
+}
+
 export type Student = {
   id: number;
   firstname: string;
   middlename: string;
   lastname: string;
   gender: string;
-  dob: string; // Assuming a string in ISO 8601 format for simplicity
-  image: string;
+  dob: Date; // Assuming a string in ISO 8601 format for simplicity
+  image: Image[];
   dobNp: string; // Assuming a string in ISO 8601 format for simplicity
   community: string;
   ethnicity: string;
@@ -134,8 +144,8 @@ export type Student = {
   email: string;
   address: string;
   tempAddress: string;
-  admissionDate: string; // Assuming a string in ISO 8601 format for simplicity
-  admissionDateNp: string; // Assuming a string in ISO 8601 format for simplicity
+  admissionDate: Date; // Assuming a string in ISO 8601 format for simplicity
+  admissionDateNp: Date; // Assuming a string in ISO 8601 format for simplicity
   batch: string;
   group: string;
   section: string;
@@ -179,7 +189,7 @@ export const navItems: NavItem[] = [
     icon: "profile",
     label: "profile",
   },
-  {
+  /*{
     title: "Kanban",
     href: "/dashboard/kanban",
     icon: "kanban",
@@ -190,5 +200,5 @@ export const navItems: NavItem[] = [
     href: "/",
     icon: "login",
     label: "login",
-  },
+  },*/
 ];

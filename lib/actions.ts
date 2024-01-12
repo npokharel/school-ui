@@ -4,6 +4,7 @@ import { signIn } from '@/auth';
 import { signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 import { auth } from "auth";
+import { unstable_noStore as noStore } from 'next/cache';
 export async function authenticate(
   prevState: string | undefined,
   formData: FormData,
@@ -60,18 +61,17 @@ export async function addStudent(data : FormData) {
   })
 }
 
-export async function fetchStudentById(id: string) {
+export async function fetchStudentById(id: number) {
+  noStore();
   const session = await auth()
-  console.log("in here", id)
   try {
-    const data = await fetch (`${process.env.API_URL}/student/${id}`,{
+    return await fetch (`${process.env.API_URL}/student/${id}`,{
       headers: {
         'content-type': 'application/json',
         Authorization: `Bearer ${session?.user.access_token}`,
       }
     })
-
-  }catch (error) {
+  } catch (error){
     console.log("API fetch error", error)
   }
 }
