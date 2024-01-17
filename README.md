@@ -37,6 +37,21 @@ This is a starter template using the following stack:
 
 Clone this repo
 
+Copy the env.example.txt file to .env.local on the same directory level
+
+```
+cp env.example.txt .env.local
+```
+
+If you don't already have a uploadthing secret key, sign up and create one from the dashboard!
+https://uploadthing.com/
+
+Add env variables to `.env.local` file
+```
+UPLOADTHING_APP_ID=...
+UPLOADTHING_SECRET=... # A secret key for your app (starts with sk_live_)
+```
+
 Run the following commands to start the development server (npm):
 
 ```
