@@ -36,6 +36,10 @@ This app is using the following stack:
 
 Clone this repo
 
+```
+git clone git@github.com:nuptse-tech/school-ui.git .
+```
+
 Copy the env.example.txt file to .env.local on the same directory level
 
 ```
