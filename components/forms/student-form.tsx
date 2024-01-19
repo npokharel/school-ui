@@ -53,7 +53,17 @@ const formSchema = z.object({
     .min(1, { message: "At least one image must be added." }),
   community: z.string().optional(),
   ethnicity: z.string().optional(),
-  religion: z.string().optional()
+  religion: z.string().optional(),
+  nationality: z.string().optional(),
+  country: z.string(),
+  province: z.string().optional(),
+  district: z.string().optional(),
+  municipality: z.string().optional(),
+  city: z.string().optional(),
+  mobile: z.string().optional(),
+  email: z.string().optional(),
+  address: z.string().optional(),
+  tempAddress: z.string().optional(),
   // price: z.coerce.number(),
   // category: z.string().min(1, { message: "Please select a category" }),
 });
@@ -427,6 +437,191 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
                     <Input
                       disabled={loading}
                       placeholder="Religion"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/*<div className="">
+              <h2 className="text-sm font-medium leading-none">Address Information</h2>
+              <FormLabel>Address Information</FormLabel>
+
+
+            </div>*/}
+            <FormLabel>Address Information</FormLabel>
+            <Separator className="col-span-3 mb-0 mt-0"/>
+
+            <FormField
+              control={form.control}
+              name="nationality"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nationality</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Nationality"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="country"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Country</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Country"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="province"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Province</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Province"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="district"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>District</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="District"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="municipality"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Municipality</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Municipality"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="city"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>City</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="City"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="mobile"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Mobile</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Mobile"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Email"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Permanent Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Address"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="tempAddress"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Temporary Address</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Temporary Address"
                       {...field}
                     />
                   </FormControl>
