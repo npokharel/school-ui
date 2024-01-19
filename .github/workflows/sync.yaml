@@ -30,7 +30,14 @@ jobs:
           eval "$(ssh-agent -s)"
           ssh-add ~/.ssh/id_rsa    
 
-      - name: Push to personal repository
+      - name: Add personal repository remote
         run: |
           git remote add personal-repo git@github.com:npokharel/school-ui.git
-          git push personal-repo HEAD:trunk
+
+      - name: Fetch latest changes from personal repository
+        run: |
+           git fetch personal-repo
+
+      - name: Force-push changes to personal repository
+        run: |
+           git push -f personal-repo HEAD:trunk
