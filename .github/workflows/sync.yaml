@@ -1,0 +1,60 @@
+on:
+  push:
+    branches:
+      - trunk
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    steps:
+      - name: Checkout personal repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git user
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git config pull.rebase true
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+
+      - name: Fetch changes from organization
+        run: |
+          git remote add organization git@github.com:nuptse-tech/school-ui.git
+          git fetch organization
+          git pull --no-edit --allow-unrelated-histories --strategy=recursive --strategy-option=theirs organization trunk
+
+      - name: Org Debugging Info
+        run: |
+          git remote -v
+          git branch -a
+          git log --oneline -n 5
+
+
+      - name: Fetch changes from sync-branch
+        run: |
+          git fetch origin sync-branch:sync-branch
+          git fetch origin main:main
+          git checkout main
+          git merge --allow-unrelated-histories sync-branch --no-edit
+
+      - name: Push changes to personal repository
+        run: |
+          git push git@github.com:npokharel/school-ui.git main
+
+      - name: Personal Debugging Info
+        run: |
+          git remote -v
+          git branch -a
+          git log --oneline -n 5
