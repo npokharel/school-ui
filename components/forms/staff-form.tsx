@@ -19,10 +19,14 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Heading } from "@/components/ui/heading";
 import { useToast } from "../ui/use-toast";
-import { useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 import FileUpload from "../file-upload";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "@radix-ui/react-icons";
@@ -50,7 +54,7 @@ const formSchema = z.object({
   image: z
     .array(ImgSchema)
     .max(IMG_MAX_LIMIT, { message: "You can only add up to 3 images" })
-    .min(1, { message: "At least one image must be added." }),
+    .optional(),
   community: z.string().optional(),
   ethnicity: z.string().optional(),
   religion: z.string().optional(),
@@ -75,7 +79,7 @@ interface StaffFormProps {
   categories?: any;
 }
 
-export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
+export const StaffForm: React.FC<StaffFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
@@ -86,51 +90,51 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
   const description = initialData ? "Edit a staff." : "Add a new staff";
   const toastMessage = initialData ? "Staff updated." : "Staff created.";
   const action = initialData ? "Save changes" : "Create";
-  const { data: session } = useSession()
+  const { data: session } = useSession();
 
   const defaultValues = initialData
     ? initialData
     : {
-      firstname: "",
-      middlename: "",
-      lastname: "",
-      gender: "",
-      dob: null,
-      image: [],
-    };
+        firstname: "",
+        middlename: "",
+        lastname: "",
+        gender: "",
+        dob: null,
+        image: [],
+      };
 
   const form = useForm<StaffFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
-  console.log("initial data ", initialData)
+  console.log("initial data ", initialData);
 
   const onSubmit = async (data: StaffFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
-        console.log("!update submit data", data)
+        console.log("!update submit data", data);
         // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
       } else {
         // const res = await axios.post(`/api/products/create-product`, data);
         // console.log("product", res);
-        data = JSON.parse(JSON.stringify(data))
-        console.log("submit data", data)
+        data = JSON.parse(JSON.stringify(data));
+        console.log("submit data", data);
         // const res = await addStaff(data);
 
-        const res = await fetch(`http://localhost:8080/api/v1/staff`,{
-          method: 'POST',
+        const res = await fetch(`http://localhost:8080/api/v1/staff`, {
+          method: "POST",
           body: JSON.stringify(data),
           headers: {
-            'content-type': 'application/json',
+            "content-type": "application/json",
             Authorization: `Bearer ${session?.user.access_token}`,
-          }
-        })
+          },
+        });
 
         //const res = await addStaff(data)
-        console.log("res ", res)
-        if(res.ok) {
+        console.log("res ", res);
+        if (res.ok) {
           toast({
             variant: "default",
             title: "Success.",
@@ -147,7 +151,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
         description: "There was a problem with your request.",
       });*/
     } catch (error: any) {
-      console.log("the error ", error.message)
+      console.log("the error ", error.message);
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -302,17 +306,13 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
                         <FormControl>
                           <RadioGroupItem value="m" />
                         </FormControl>
-                        <FormLabel className="font-normal">
-                          Male
-                        </FormLabel>
+                        <FormLabel className="font-normal">Male</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
                           <RadioGroupItem value="f" />
                         </FormControl>
-                        <FormLabel className="font-normal">
-                          Female
-                        </FormLabel>
+                        <FormLabel className="font-normal">Female</FormLabel>
                       </FormItem>
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
@@ -340,7 +340,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
                           variant={"outline"}
                           className={cn(
                             "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
+                            !field.value && "text-muted-foreground",
                           )}
                         >
                           {field.value ? (
@@ -451,7 +451,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
 
             </div>*/}
             <FormLabel>Address Information</FormLabel>
-            <Separator className="col-span-3 mb-0 mt-0"/>
+            <Separator className="col-span-3 mb-0 mt-0" />
 
             <FormField
               control={form.control}
@@ -549,11 +549,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
                 <FormItem>
                   <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="City"
-                      {...field}
-                    />
+                    <Input disabled={loading} placeholder="City" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -567,11 +563,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
                 <FormItem>
                   <FormLabel>Mobile</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Mobile"
-                      {...field}
-                    />
+                    <Input disabled={loading} placeholder="Mobile" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -585,11 +577,7 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={loading}
-                      placeholder="Email"
-                      {...field}
-                    />
+                    <Input disabled={loading} placeholder="Email" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -629,7 +617,6 @@ export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
                 </FormItem>
               )}
             />
-
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}
