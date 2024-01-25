@@ -183,7 +183,7 @@ export const navItems: NavItem[] = [
   },
   {
     title: "Classroom",
-    href: "/dashboard/student",
+    href: "/dashboard/classroom",
     icon: "employee",
     label: "classroom",
   },
