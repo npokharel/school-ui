@@ -28,6 +28,14 @@ export async function authenticate(
 export async function logOut() {
   await signOut();
 }
+export async function getClassrooms() {
+  const session = await auth()
+  return await fetch(
+    `${process.env.API_URL}/classroom`, {
+      headers: {Authorization: `Bearer ${session?.user.access_token}`}
+    }
+  );
+}
 
 export async function getStudents() {
   const session = await auth()
@@ -66,6 +74,21 @@ export async function fetchStudentById(id: number) {
   const session = await auth()
   try {
     return await fetch (`${process.env.API_URL}/student/${id}`,{
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${session?.user.access_token}`,
+      }
+    })
+  } catch (error){
+    console.log("API fetch error", error)
+  }
+}
+
+export async function fetchClassroomById(id: number) {
+  noStore();
+  const session = await auth()
+  try {
+    return await fetch (`${process.env.API_URL}/classroom/${id}`,{
       headers: {
         'content-type': 'application/json',
         Authorization: `Bearer ${session?.user.access_token}`,
