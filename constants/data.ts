@@ -92,6 +92,7 @@ export const users: User[] = [
   },
 ];
 
+
 export type Employee = {
   id: number;
   first_name: string;
@@ -163,6 +164,28 @@ export type Student = {
   guardianEmail: string;
   guardianRelation: string;
 };
+// Sample subject data for testing
+export type Subject = {
+  subjectID: any;
+  id: number;
+  name: string;
+  code: string;
+  description: string;
+  classId: number;
+  teacherId: number;
+  startDate: string; // You might want to use a proper date type if possible
+  endDate: string; // You might want to use a proper date type if possible
+  totalCredits: number;
+  prerequisites: string;
+  assessmentMethod: string;
+  additionalAttributes: {
+    difficultyLevel: string;
+    isElective: boolean;
+    // Add any other custom attributes here
+  };
+
+};
+
 
 export const navItems: NavItem[] = [
   {
@@ -177,6 +200,13 @@ export const navItems: NavItem[] = [
     icon: "employee",
     label: "employee",
   },
+  {
+    title: "Subject",
+    href: "/dashboard/subject", 
+    icon: "employee", 
+    label: "subject",
+  },
+  
   {
     title: "User",
     href: "/dashboard/user",
