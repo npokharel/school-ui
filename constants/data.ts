@@ -92,6 +92,7 @@ export const users: User[] = [
   },
 ];
 
+
 export type Employee = {
   id: number;
   first_name: string;
@@ -120,6 +121,16 @@ export type Image = {
   size: number
   url: string
 }
+
+
+  export type Classroom = {
+    classId: string;
+    classname: string;
+    classdiscription: string;
+    classcapacity: string;
+    classcode: string;
+
+  }
 
 export type Student = {
   id: number;
@@ -163,6 +174,28 @@ export type Student = {
   guardianEmail: string;
   guardianRelation: string;
 };
+// Sample subject data for testing
+export type Subject = {
+  subjectID: any;
+  id: number;
+  name: string;
+  code: string;
+  description: string;
+  classId: number;
+  teacherId: number;
+  startDate: string; // You might want to use a proper date type if possible
+  endDate: string; // You might want to use a proper date type if possible
+  totalCredits: number;
+  prerequisites: string;
+  assessmentMethod: string;
+  additionalAttributes: {
+    difficultyLevel: string;
+    isElective: boolean;
+    // Add any other custom attributes here
+  };
+
+};
+
 
 export type Staff = {
   id: number;
@@ -197,8 +230,27 @@ export const navItems: NavItem[] = [
     label: "Dashboard",
   },
   {
+    title: "Classroom",
+    href: "/dashboard/classroom",
+    icon: "employee",
+    label: "classroom",
+  },
+  {
     title: "Student",
     href: "/dashboard/student",
+    icon: "employee",
+    label: "employee",
+  },
+  {
+    title: "Subject",
+    href: "/dashboard/subject",
+    icon: "employee",
+    label: "subject",
+  },
+
+  {
+    title: "Teacher",
+    href: "/dashboard/teacher",
     icon: "employee",
     label: "employee",
   },
