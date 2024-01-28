@@ -35,7 +35,7 @@ export const config =  {
     })
   ],
   pages: {
-    signIn: "/", //sigin page
+    signIn: "/", //sign in page
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
