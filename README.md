@@ -34,7 +34,7 @@ This app is using the following stack:
 
 ## Getting Started
 
-Clone this repo
+Clone this repo on your local directory
 
 ```
 git clone git@github.com:nuptse-tech/school-ui.git .
