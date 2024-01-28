@@ -122,6 +122,16 @@ export type Image = {
   url: string
 }
 
+
+  export type Classroom = {
+    classId: string;
+    classname: string;
+    classdiscription: string;
+    classcapacity: string;
+    classcode: string;
+
+  }
+
 export type Student = {
   id: number;
   firstname: string;
@@ -187,12 +197,43 @@ export type Subject = {
 };
 
 
+export type Staff = {
+  id: number;
+  firstname: string;
+  middlename: string;
+  lastname: string;
+  gender: string;
+  dob: Date; // Assuming a string in ISO 8601 format for simplicity
+  image: Image[];
+  dobNp: string; // Assuming a string in ISO 8601 format for simplicity
+  community: string;
+  ethnicity: string;
+  religion: string;
+  nationality: string;
+  country: string;
+  province: string;
+  district: string;
+  municipality: string;
+  city: string;
+  mobile: string;
+  phone: string;
+  email: string;
+  address: string;
+  tempAddress: string;
+};
+
 export const navItems: NavItem[] = [
   {
     title: "Dashboard",
     href: "/dashboard",
     icon: "dashboard",
     label: "Dashboard",
+  },
+  {
+    title: "Classroom",
+    href: "/dashboard/classroom",
+    icon: "employee",
+    label: "classroom",
   },
   {
     title: "Student",
@@ -202,11 +243,23 @@ export const navItems: NavItem[] = [
   },
   {
     title: "Subject",
-    href: "/dashboard/subject", 
-    icon: "employee", 
+    href: "/dashboard/subject",
+    icon: "employee",
     label: "subject",
   },
-  
+
+  {
+    title: "Teacher",
+    href: "/dashboard/teacher",
+    icon: "employee",
+    label: "employee",
+  },
+  {
+    title: "Staff",
+    href: "/dashboard/staff",
+    icon: "user",
+    label: "staff",
+  },
   {
     title: "User",
     href: "/dashboard/user",

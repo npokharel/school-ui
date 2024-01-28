@@ -4,7 +4,7 @@
 
 ## Overview
 
-This is a starter template using the following stack:
+This app is using the following stack:
 
 - Framework - [Next.js 14](https://nextjs.org/13)
 - Language - [TypeScript](https://www.typescriptlang.org)
@@ -29,13 +29,31 @@ This is a starter template using the following stack:
 | [Users/new](https://next-shadcn-dashboard-starter.vercel.app/dashboard/user/new)  | A User Form with Uploadthing to support file uploading with dropzone.                                 |
 | [Employee](https://next-shadcn-dashboard-starter.vercel.app/dashboard/employee)   | Tanstack tables with server side searching, pagination etc).                                          |
 | [Profile](https://next-shadcn-dashboard-starter.vercel.app/dashboard/profile)     | Mutistep dynamic forms using react-hook-form and zod for form validation.                             |
-| [Kanban Board](https://next-shadcn-dashboard-starter.vercel.app/dashboard/kanban) | A Drag n Drop task management board with dnd-kit and zustand to persist state locally.                |
 | [Not Found](https://next-shadcn-dashboard-starter.vercel.app/dashboard/notfound)  | Not Found Page Added in the root level                                                                |
 | -                                                                                 | -                                                                                                     |
 
 ## Getting Started
 
-Clone this repo
+Clone this repo on your local directory
+
+```
+git clone git@github.com:nuptse-tech/school-ui.git .
+```
+
+Copy the env.example.txt file to .env.local on the same directory level
+
+```
+cp env.example.txt .env.local
+```
+
+If you don't already have a uploadthing secret key, sign up and create one from the dashboard!
+https://uploadthing.com/
+
+Add env variables to `.env.local` file
+```
+UPLOADTHING_APP_ID=...
+UPLOADTHING_SECRET=... # A secret key for your app (starts with sk_live_)
+```
 
 Run the following commands to start the development server (npm):
 

@@ -28,6 +28,14 @@ export async function authenticate(
 export async function logOut() {
   await signOut();
 }
+export async function getClassrooms() {
+  const session = await auth()
+  return await fetch(
+    `${process.env.API_URL}/classroom`, {
+      headers: {Authorization: `Bearer ${session?.user.access_token}`}
+    }
+  );
+}
 
 export async function getStudents() {
   const session = await auth();
@@ -43,6 +51,23 @@ export async function getSubjects() {
   return await fetch(
     `${process.env.API_URL}/subject`, {
       headers: { Authorization: `Bearer ${session?.user.access_token}` },
+    }
+  );
+}
+export async function getTeachers() {
+  const session = await auth()
+  return await fetch(
+    `${process.env.API_URL}/teacher`, {
+      headers: {Authorization: `Bearer ${session?.user.access_token}`}
+    }
+  );
+}
+
+export async function getStaffs() {
+  const session = await auth()
+  return await fetch(
+    `${process.env.API_URL}/staff`, {
+      headers: {Authorization: `Bearer ${session?.user.access_token}`}
     }
   );
 }
@@ -72,6 +97,51 @@ export async function addSubject(data: FormData) {
     },
   });
 }
+export async function addTeacher(data : FormData) {
+  console.log("data", data)
+  const session = await auth()
+  /*return await fetch(
+    `${process.env.API_URL}/teacher`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session?.user.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: data
+    }
+  );*/
+  return await fetch(`${process.env.API_URL}/teacher`,{
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${session?.user.access_token}`,
+    }
+  })
+}
+
+export async function addStaff(data : FormData) {
+  console.log("data", data)
+  const session = await auth()
+  /*return await fetch(
+    `${process.env.API_URL}/staff`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session?.user.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: data
+    }
+  );*/
+  return await fetch(`${process.env.API_URL}/staff`,{
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${session?.user.access_token}`,
+    }
+  })
+}
 
 export async function fetchStudentById(id: number) {
   noStore();
@@ -100,5 +170,51 @@ export async function fetchSubjectById(id: number) {
     });
   } catch (error) {
     console.log("API fetch error", error);
+  }
+}
+
+export async function fetchTeacherById(id: number) {
+  noStore();
+  const session = await auth()
+  try {
+    return await fetch (`${process.env.API_URL}/teacher/${id}`,{
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${session?.user.access_token}`,
+      }
+    })
+  } catch (error){
+    console.log("API fetch error", error)
+  }
+}
+
+
+export async function fetchStaffById(id: number) {
+  noStore();
+  const session = await auth()
+  try {
+    return await fetch (`${process.env.API_URL}/staff/${id}`,{
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${session?.user.access_token}`,
+      }
+    })
+  } catch (error){
+    console.log("API fetch error", error)
+  }
+}
+
+export async function fetchClassroomById(id: number) {
+  noStore();
+  const session = await auth()
+  try {
+    return await fetch (`${process.env.API_URL}/classroom/${id}`,{
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${session?.user.access_token}`,
+      }
+    })
+  } catch (error){
+    console.log("API fetch error", error)
   }
 }

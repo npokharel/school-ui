@@ -1,10 +1,10 @@
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
 import { CellAction } from "./cell-action";
-import { Student, User } from "@/constants/data";
+import { Classroom, User } from "@/constants/data";
 import { Checkbox } from "@/components/ui/checkbox";
 
-export const columns: ColumnDef<Student>[] = [
+export const columns: ColumnDef<Classroom>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -25,24 +25,24 @@ export const columns: ColumnDef<Student>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "firstname",
-    header: "First Name",
+    accessorKey: "classid",
+    header: "CLASSID",
   },
   {
-    accessorKey: "country",
-    header: "COUNTRY",
+    accessorKey: "classname",
+    header: "CLASSNAME",
   },
   {
-    accessorKey: "email",
-    header: "EMAIL",
+    accessorKey: "classdiscription",
+    header: "CLASSDISCRIPTION",
   },
   {
-    accessorKey: "mobile",
-    header: "Mobile",
+    accessorKey: "classcapacity",
+    header: "CLASSCAPACITY",
   },
   {
-    accessorKey: "gender",
-    header: "GENDER",
+    accessorKey: "classcode",
+    header: "CLASSCODE",
   },
   {
     id: "actions",

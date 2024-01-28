@@ -68,23 +68,23 @@ const formSchema = z.object({
   // category: z.string().min(1, { message: "Please select a category" }),
 });
 
-type StudentFormValues = z.infer<typeof formSchema>;
+type StaffFormValues = z.infer<typeof formSchema>;
 
-interface StudentFormProps {
+interface StaffFormProps {
   initialData: any | null;
   categories?: any;
 }
 
-export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
+export const StaffForm: React.FC<StaffFormProps> = ({initialData}) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [imgLoading, setImgLoading] = useState(false);
-  const title = initialData ? "Edit student" : "Create student";
-  const description = initialData ? "Edit a student." : "Add a new student";
-  const toastMessage = initialData ? "Student updated." : "Student created.";
+  const title = initialData ? "Edit staff" : "Create staff";
+  const description = initialData ? "Edit a staff." : "Add a new staff";
+  const toastMessage = initialData ? "Staff updated." : "Staff created.";
   const action = initialData ? "Save changes" : "Create";
   const { data: session } = useSession()
 
@@ -99,14 +99,14 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
       image: [],
     };
 
-  const form = useForm<StudentFormValues>({
+  const form = useForm<StaffFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
 
   console.log("initial data ", initialData)
 
-  const onSubmit = async (data: StudentFormValues) => {
+  const onSubmit = async (data: StaffFormValues) => {
     try {
       setLoading(true);
       if (initialData) {
@@ -117,9 +117,9 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
         // console.log("product", res);
         data = JSON.parse(JSON.stringify(data))
         console.log("submit data", data)
-        // const res = await addStudent(data);
+        // const res = await addStaff(data);
 
-        const res = await fetch(`http://localhost:8080/api/v1/student`,{
+        const res = await fetch(`http://localhost:8080/api/v1/staff`,{
           method: 'POST',
           body: JSON.stringify(data),
           headers: {
@@ -128,16 +128,16 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
           }
         })
 
-        //const res = await addStudent(data)
+        //const res = await addStaff(data)
         console.log("res ", res)
         if(res.ok) {
           toast({
             variant: "default",
             title: "Success.",
-            description: "New Student added.",
+            description: "New Staff added.",
           });
           router.refresh();
-          router.push(`/dashboard/student`);
+          router.push(`/dashboard/staff`);
         }
       }
 
