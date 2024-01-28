@@ -37,6 +37,14 @@ export async function getStudents() {
     }
   );
 }
+export async function getTeachers() {
+  const session = await auth()
+  return await fetch(
+    `${process.env.API_URL}/teacher`, {
+      headers: {Authorization: `Bearer ${session?.user.access_token}`}
+    }
+  );
+}
 
 export async function getStaffs() {
   const session = await auth()
@@ -61,6 +69,28 @@ export async function addStudent(data : FormData) {
     }
   );*/
   return await fetch(`${process.env.API_URL}/student`,{
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'content-type': 'application/json',
+      Authorization: `Bearer ${session?.user.access_token}`,
+    }
+  })
+}
+export async function addTeacher(data : FormData) {
+  console.log("data", data)
+  const session = await auth()
+  /*return await fetch(
+    `${process.env.API_URL}/teacher`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${session?.user.access_token}`,
+        "Content-Type": "application/json",
+      },
+      body: data
+    }
+  );*/
+  return await fetch(`${process.env.API_URL}/teacher`,{
     method: 'POST',
     body: JSON.stringify(data),
     headers: {
@@ -107,6 +137,21 @@ export async function fetchStudentById(id: number) {
     console.log("API fetch error", error)
   }
 }
+export async function fetchTeacherById(id: number) {
+  noStore();
+  const session = await auth()
+  try {
+    return await fetch (`${process.env.API_URL}/teacher/${id}`,{
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${session?.user.access_token}`,
+      }
+    })
+  } catch (error){
+    console.log("API fetch error", error)
+  }
+}
+
 
 export async function fetchStaffById(id: number) {
   noStore();
