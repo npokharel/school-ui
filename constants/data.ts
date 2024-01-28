@@ -121,6 +121,16 @@ export type Image = {
   url: string
 }
 
+
+  export type Classroom = {
+    classId: string;
+    classname: string;
+    classdiscription: string;
+    classcapacity: string;
+    classcode: string;
+
+  }
+
 export type Student = {
   id: number;
   firstname: string;
@@ -195,6 +205,12 @@ export const navItems: NavItem[] = [
     href: "/dashboard",
     icon: "dashboard",
     label: "Dashboard",
+  },
+  {
+    title: "Classroom",
+    href: "/dashboard/classroom",
+    icon: "employee",
+    label: "classroom",
   },
   {
     title: "Student",
