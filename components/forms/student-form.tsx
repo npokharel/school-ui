@@ -38,8 +38,9 @@ const ImgSchema = z.object({
   fileUrl: z.string(),
   url: z.string().optional(),
 });
-export const IMG_MAX_LIMIT = 3;
+export const IMG_MAX_LIMIT = 2;
 const formSchema = z.object({
+  id: z.number().optional(),
   firstname: z
     .string()
     .min(3, { message: "First Name must be at least 3 characters" }),
@@ -50,7 +51,8 @@ const formSchema = z.object({
   image: z
     .array(ImgSchema)
     .max(IMG_MAX_LIMIT, { message: "You can only add up to 3 images" })
-    .min(1, { message: "At least one image must be added." }),
+    .optional(),
+    //.min(1, { message: "At least one image must be added." }),
   community: z.string().optional(),
   ethnicity: z.string().optional(),
   religion: z.string().optional(),
@@ -97,6 +99,9 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
       gender: "",
       dob: null,
       image: [],
+      community: "",
+      ethnicity: "",
+      religion: ""
     };
 
   const form = useForm<StudentFormValues>({
@@ -111,6 +116,24 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
       setLoading(true);
       if (initialData) {
         console.log("!update submit data", data)
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/${initialData.id}`,{
+          method: 'PUT',
+          body: JSON.stringify(data),
+          headers: {
+            'content-type': 'application/json',
+              //@ts-ignore
+            Authorization: `Bearer ${session?.user.access_token}`,
+          }
+        })
+          if(res.ok) {
+              toast({
+                  variant: "default",
+                  title: "Update Successfully.",
+                  description: `Student ${initialData.firstname} updated successfully.`,
+              });
+              router.refresh();
+              router.push(`/dashboard/student`);
+          }
         // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
       } else {
         // const res = await axios.post(`/api/products/create-product`, data);
@@ -119,11 +142,12 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
         console.log("submit data", data)
         // const res = await addStudent(data);
 
-        const res = await fetch(`http://localhost:8080/api/v1/student`,{
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student`,{
           method: 'POST',
           body: JSON.stringify(data),
           headers: {
             'content-type': 'application/json',
+              //@ts-ignore
             Authorization: `Bearer ${session?.user.access_token}`,
           }
         })

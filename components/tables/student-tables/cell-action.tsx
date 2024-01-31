@@ -12,6 +12,8 @@ import { Student, User } from "@/constants/data";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import {useSession} from "next-auth/react";
+import {useToast} from "@/components/ui/use-toast";
 
 interface CellActionProps {
   data: Student;
@@ -22,8 +24,30 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const params = useParams();
+  const { data: session } = useSession()
+  const { toast } = useToast();
 
-  const onConfirm = async () => {};
+  const onConfirm = async () => {
+    console.log("delete clicked", data.id)
+    setOpen(false)
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/${data.id}`,{
+      method: 'DELETE',
+      headers: {
+        'content-type': 'application/json',
+        //@ts-ignore
+        Authorization: `Bearer ${session?.user.access_token}`,
+      }
+    })
+    if (res.ok) {
+      toast({
+        variant: "default",
+        title: "Successfully Deleted",
+        description: `Student record deleted successfully.`,
+      });
+      router.push(`/dashboard/student`);
+      router.refresh();
+    }
+  };
 
   return (
     <>

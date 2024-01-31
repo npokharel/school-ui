@@ -14,8 +14,9 @@ export default async function Page({ params }: { params: { studentId: number } }
   const studentRes = await res.json();
   const student : Student = studentRes.data
   if(student){
+    console.log("the student object ", student)
     // @ts-ignore
-    student.image = [student?.image]
+    // student.image = [student?.image]
     student.dob = new Date(student.dob)
   }
 

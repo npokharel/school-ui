@@ -123,14 +123,14 @@ export type Image = {
 }
 
 
-  export type Classroom = {
-    classId: string;
-    classname: string;
-    classdiscription: string;
-    classcapacity: string;
-    classcode: string;
+export type Classroom = {
+  classId: number;
+  classname: string;
+  classdiscription: string;
+  classcapacity: string;
+  classcode: string;
 
-  }
+}
 
 export type Student = {
   id: number;

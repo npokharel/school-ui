@@ -40,20 +40,18 @@ const ImgSchema = z.object({
 });
 export const IMG_MAX_LIMIT = 3;
 const formSchema = z.object({
-  firstname: z
-    .string()
-    .min(3, { message: "First Name must be at least 3 characters" }),
-  middlename: z.string().optional(),
-  lastname: z.string(),
-  gender: z.string(),
-  dob: z.date(),
+  classId: z.string().min(3, { message: "First Name must be at least 3 characters" }),
+  classdiscription: z.string(),
+  classcode: z.string(),
+  classcapacity: z.string(),
+  classname: z.string(),
+  
   image: z
     .array(ImgSchema)
     .max(IMG_MAX_LIMIT, { message: "You can only add up to 3 images" })
     .min(1, { message: "At least one image must be added." }),
-  community: z.string().optional(),
-  ethnicity: z.string().optional(),
-  religion: z.string().optional()
+ 
+
   // price: z.coerce.number(),
   // category: z.string().min(1, { message: "Please select a category" }),
 });
@@ -94,7 +92,7 @@ export const ClassroomForm: React.FC<ClassroomFormProps> = ({initialData}) => {
     defaultValues,
   });
 
-  console.log("initial data ", initialData)
+  // console.log("initial data ", initialData)
 
   const onSubmit = async (data: ClassroomFormValues) => {
     try {
@@ -191,7 +189,7 @@ export const ClassroomForm: React.FC<ClassroomFormProps> = ({initialData}) => {
           className="space-y-8 w-full"
         >
           <div className="md:grid md:grid-cols-3 gap-8">
-            {/* <FormField
+            <FormField
               control={form.control}
               name="classId"
               render={({ field }) => (
@@ -279,7 +277,7 @@ export const ClassroomForm: React.FC<ClassroomFormProps> = ({initialData}) => {
                   <FormMessage />
                 </FormItem>
               )}
-            /> */}
+            />
             {/*<FormField
               control={form.control}
               name="gender"
