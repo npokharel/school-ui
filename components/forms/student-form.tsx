@@ -12,7 +12,7 @@ import { Heading } from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Calendar, Trash } from "lucide-react";
+import { Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,10 +20,7 @@ import * as z from "zod";
 import FileUpload from "../file-upload";
 import { useToast } from "../ui/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { CalendarIcon } from "@radix-ui/react-icons";
+import { useSession } from "next-auth/react";
 
 const ImgSchema = z.object({
   fileName: z.string(),
@@ -44,11 +41,14 @@ const formSchema = z.object({
   middlename: z.string().optional(),
   lastname: z.string(),
   gender: z.string(),
-  dob: z.date(),
+  dob: z.string()
+    .refine((value) => /^\d{4}-\d{2}-\d{2}$/.test(value), {
+      message: "Start date should be in the format YYYY-MM-DD",
+    }),
   image: z
     .array(ImgSchema)
     .max(IMG_MAX_LIMIT, { message: "You can only add up to 3 images" })
-    .min(1, { message: "At least one image must be added." }),
+    .min(0, { message: "At least one image must be added." }),
   //.min(1, { message: "At least one image must be added." }),
   community: z.string().optional(),
   ethnicity: z.string().optional(),
@@ -85,6 +85,9 @@ export const StudentForm: React.FC<StudentFormProps> = ({
   const description = initialData ? "Edit a student." : "Add a new student";
   const toastMessage = initialData ? "Student updated." : "Student created.";
   const action = initialData ? "Save changes" : "Create";
+  const { data: session } = useSession()
+
+  console.log("initial data ", initialData)
 
   const defaultValues = initialData
     ? initialData
@@ -92,7 +95,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         name: "",
         description: "",
         price: 0,
-        imgUrl: [],
+        image: [],
         category: "",
       };
 
@@ -157,6 +160,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({
         title: "Uh oh! Something went wrong.",
         description: "There was a problem with your request.",
       });
+      console.log(error)
     } finally {
       setLoading(false);
     }
@@ -334,51 +338,21 @@ export const StudentForm: React.FC<StudentFormProps> = ({
               control={form.control}
               name="dob"
               render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <FormLabel>Date of birth</FormLabel>
-                  {/*@ts-ignore*/}
-                  <Popover key={field?.value}>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={"outline"}
-                          className={cn(
-                            "w-[240px] pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, "PPP")
-                          ) : (
-                            <span>Pick a date</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        // defaultMonth={field.value}
-                        // captionLayout="dropdown-buttons"
-                        // selected={field.value}
-                        onSelect={field.onChange}
-                        //fromYear={1960}
-                        // toYear={2030}
-                        /*disabled={(date) =>
-                          date > new Date() || date < new Date("1900-01-01")
-                        }*/
-                        // initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormDescription>
-                    Your date of birth is used to calculate your age.
-                  </FormDescription>
+                <FormItem>
+                  <FormLabel>Start date</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="date"
+                      disabled={loading}
+                      {...field}
+                      value={field.value}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             {/*<FormField
               control={form.control}
               name="image"
@@ -650,7 +624,6 @@ export const StudentForm: React.FC<StudentFormProps> = ({
                 </FormItem>
               )}
             />
-
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
             {action}

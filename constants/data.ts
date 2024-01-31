@@ -116,9 +116,13 @@ export type Image = {
   createdAt: string,
   updatedAt: string
   imageKey: string
+  fileKey?:string
   name: string
+  fileName?:string
   size: number
+  fileSize?:number
   url: string
+  fileUrl?:string
 }
 
 export type Student = {
