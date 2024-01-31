@@ -8,9 +8,9 @@ import { Student } from "@/constants/data";
 import { cn } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { getStudents } from "@/lib/actions";
+import { genericGet } from "@/lib/actions";
 
-const breadcrumbItems = [{ title: "Student", link: "/dashboard/user" }];
+const breadcrumbItems = [{ title: "Student", link: "/dashboard/student" }];
 
 type paramsProps = {
   searchParams: {
@@ -23,9 +23,13 @@ export default async function page({ searchParams }: paramsProps) {
   const pageLimit = Number(searchParams.limit) || 10;
   const country = searchParams.search || null;
   const offset = (page - 1) * pageLimit;
-  const res = await getStudents()
+
+  /*const res = await fetch(
+    `https://api.slingacademy.com/v1/sample-data/users?offset=${offset}&limit=${pageLimit}` +
+      (country ? `&search=${country}` : ""),
+  );*/
+  const res = await genericGet("student")
   const studentRes = await res.json();
-  console.log("studentRes", studentRes);
   const students: Student[] = studentRes.data;
   const totalUsers = students?.length//studentRes.total; //1000
   const pageCount = Math.ceil(totalUsers / pageLimit);
@@ -48,6 +52,7 @@ export default async function page({ searchParams }: paramsProps) {
           </Link>
         </div>
         <Separator />
+
         <StudentTable
           searchKey="country"
           pageNo={page}

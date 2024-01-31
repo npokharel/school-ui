@@ -1,25 +1,20 @@
 "use client";
-import React, { useState } from "react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { useForm } from "react-hook-form";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useRouter, useSearchParams } from "next/navigation";
-import GoogleSignInButton from "../github-auth-button";
+import { Input } from "@/components/ui/input";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
-import { AuthError } from "next-auth";
-import { ExclamationTriangleIcon } from "@radix-ui/react-icons";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Enter a valid email address" }),
@@ -29,41 +24,35 @@ const formSchema = z.object({
 type UserFormValue = z.infer<typeof formSchema>;
 
 export default function UserAuthForm() {
-  // const router = useRouter();
-  // const [errorMessage, dispatch] = useFormState(authenticate, undefined);
-  const searchParams = useSearchParams()
-  console.log("search params ", searchParams.get('error'))
-  const [ errorMessage, setErrorMessage] = useState("")
-  const callbackUrl = searchParams.get("callbackUrl")
-  const [loading, setLoading] = useState(false)
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
+  const [loading, setLoading] = useState(false);
   const defaultValues = {
     email: "",
-    password: ""
-  }
+    password:""
+  };
   const form = useForm<UserFormValue>({
     resolver: zodResolver(formSchema),
     defaultValues,
-  })
+  });
 
   const onSubmit = async (data: UserFormValue) => {
-    try {
-      await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        callbackUrl: callbackUrl ?? "/dashboard",
-      });
-    }catch (error) {
-      if (error instanceof AuthError) {
-        console.log("errorsssss ===> ")
-      }
-    }}
+    /*signIn("credentials", {
+      email: data.email,
+      callbackUrl: callbackUrl ?? "/dashboard",
+    });*/
+    await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      callbackUrl: callbackUrl ?? "/dashboard",
+    });
+  };
 
   return (
     <>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          // action={dispatch}
           className="space-y-2 w-full"
         >
           <FormField
@@ -84,7 +73,6 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           />
-
           <FormField
             control={form.control}
             name="password"
@@ -103,22 +91,13 @@ export default function UserAuthForm() {
               </FormItem>
             )}
           />
-          {searchParams.get('error') && (
-            <Alert variant="destructive">
-              <ExclamationTriangleIcon className="h-4 w-4" />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                Something might be wrong.
-              </AlertDescription>
-            </Alert>
-          )}
 
-          <Button disabled={loading} className="ml-auto w-full" type="submit">
+          <Button disabled={loading} className=" ml-auto w-full duration-800 ease-in-out mt-[20px]" type="submit">
             Continue With Email
           </Button>
         </form>
       </Form>
-      <div className="relative">
+      {/*<div className="relative">
         <div className="absolute inset-0 flex items-center">
           <span className="w-full border-t" />
         </div>
@@ -128,7 +107,7 @@ export default function UserAuthForm() {
           </span>
         </div>
       </div>
-      <GoogleSignInButton />
+      <GoogleSignInButton />*/}
     </>
   );
 }

@@ -39,15 +39,6 @@ export type Actions = {
   updateCol: (id: UniqueIdentifier, newName: string) => void;
 };
 
-const initialTasks: Task[] = [
-  {
-    id: "task1",
-    description: "Project initiation and planning",
-    status: "TODO",
-    title: "new",
-  },
-];
-
 export const useTaskStore = create<State & Actions>()(
   persist(
     (set) => ({
@@ -86,17 +77,3 @@ export const useTaskStore = create<State & Actions>()(
     { name: "task-store", skipHydration: true },
   ),
 );
-
-export type User = {
-  id?: string;
-  name?: string;
-  email?: string;
-  username?: string;
-  roles?: any;
-  currentAuthority?: string;
-  type?: string;
-  status?: string;
-  success?: string;
-  access_token?: string;
-  refresh_token?: string;
-};

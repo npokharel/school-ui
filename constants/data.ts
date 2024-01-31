@@ -92,7 +92,6 @@ export const users: User[] = [
   },
 ];
 
-
 export type Employee = {
   id: number;
   first_name: string;
@@ -122,20 +121,10 @@ export type Image = {
   url: string
 }
 
-
-export type Classroom = {
-  classId: number;
-  classname: string;
-  classdiscription: string;
-  classcapacity: string;
-  classcode: string;
-
-}
-
 export type Student = {
   id: number;
   firstname: string;
-  middlename: string;
+  middlename?: string;
   lastname: string;
   gender: string;
   dob: Date; // Assuming a string in ISO 8601 format for simplicity
@@ -174,53 +163,6 @@ export type Student = {
   guardianEmail: string;
   guardianRelation: string;
 };
-// Sample subject data for testing
-export type Subject = {
-  subjectID: any;
-  id: number;
-  name: string;
-  code: string;
-  description: string;
-  classId: number;
-  teacherId: number;
-  startDate: string; // You might want to use a proper date type if possible
-  endDate: string; // You might want to use a proper date type if possible
-  totalCredits: number;
-  prerequisites: string;
-  assessmentMethod: string;
-  additionalAttributes: {
-    difficultyLevel: string;
-    isElective: boolean;
-    // Add any other custom attributes here
-  };
-
-};
-
-
-export type Staff = {
-  id: number;
-  firstname: string;
-  middlename: string;
-  lastname: string;
-  gender: string;
-  dob: Date; // Assuming a string in ISO 8601 format for simplicity
-  image: Image[];
-  dobNp: string; // Assuming a string in ISO 8601 format for simplicity
-  community: string;
-  ethnicity: string;
-  religion: string;
-  nationality: string;
-  country: string;
-  province: string;
-  district: string;
-  municipality: string;
-  city: string;
-  mobile: string;
-  phone: string;
-  email: string;
-  address: string;
-  tempAddress: string;
-};
 
 export const navItems: NavItem[] = [
   {
@@ -230,41 +172,22 @@ export const navItems: NavItem[] = [
     label: "Dashboard",
   },
   {
-    title: "Classroom",
-    href: "/dashboard/classroom",
-    icon: "employee",
-    label: "classroom",
-  },
-  {
     title: "Student",
     href: "/dashboard/student",
-    icon: "employee",
-    label: "employee",
-  },
-  {
-    title: "Subject",
-    href: "/dashboard/subject",
-    icon: "employee",
-    label: "subject",
-  },
-
-  {
-    title: "Teacher",
-    href: "/dashboard/teacher",
-    icon: "employee",
-    label: "employee",
-  },
-  {
-    title: "Staff",
-    href: "/dashboard/staff",
     icon: "user",
-    label: "staff",
+    label: "Student",
   },
   {
     title: "User",
     href: "/dashboard/user",
     icon: "user",
     label: "user",
+  },
+  {
+    title: "Employee",
+    href: "/dashboard/employee",
+    icon: "employee",
+    label: "employee",
   },
   {
     title: "Profile",

@@ -1,42 +1,39 @@
 "use client";
-import * as z from "zod";
-import React, { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Trash } from "lucide-react";
-import { useParams, useRouter } from "next/navigation";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Form,
-  FormControl,
-  FormDescription,
+  FormControl, FormDescription,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
+  FormMessage
 } from "@/components/ui/form";
-import { Separator } from "@/components/ui/separator";
 import { Heading } from "@/components/ui/heading";
-import { useToast } from "../ui/use-toast";
-import { useSession} from "next-auth/react";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Calendar, Trash } from "lucide-react";
+import { useParams, useRouter } from "next/navigation";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import FileUpload from "../file-upload";
+import { useToast } from "../ui/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon } from "@radix-ui/react-icons";
-import { Calendar } from "@/components/ui/calendar";
 
 const ImgSchema = z.object({
   fileName: z.string(),
-  name: z.string().optional(),
+  name: z.string(),
   fileSize: z.number(),
-  size: z.number().optional(),
+  size: z.number(),
   fileKey: z.string(),
-  key: z.string().optional(),
+  key: z.string(),
   fileUrl: z.string(),
-  url: z.string().optional(),
+  url: z.string(),
 });
 export const IMG_MAX_LIMIT = 2;
 const formSchema = z.object({
@@ -51,8 +48,8 @@ const formSchema = z.object({
   image: z
     .array(ImgSchema)
     .max(IMG_MAX_LIMIT, { message: "You can only add up to 3 images" })
-    .optional(),
-    //.min(1, { message: "At least one image must be added." }),
+    .min(1, { message: "At least one image must be added." }),
+  //.min(1, { message: "At least one image must be added." }),
   community: z.string().optional(),
   ethnicity: z.string().optional(),
   religion: z.string().optional(),
@@ -73,43 +70,36 @@ const formSchema = z.object({
 type StudentFormValues = z.infer<typeof formSchema>;
 
 interface StudentFormProps {
-  initialData: any | null;
-  categories?: any;
+  initialData: any | null
 }
 
-export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
+export const StudentForm: React.FC<StudentFormProps> = ({
+  initialData
+}) => {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [imgLoading, setImgLoading] = useState(false);
   const title = initialData ? "Edit student" : "Create student";
   const description = initialData ? "Edit a student." : "Add a new student";
   const toastMessage = initialData ? "Student updated." : "Student created.";
   const action = initialData ? "Save changes" : "Create";
-  const { data: session } = useSession()
 
   const defaultValues = initialData
     ? initialData
     : {
-      firstname: "",
-      middlename: "",
-      lastname: "",
-      gender: "",
-      dob: null,
-      image: [],
-      community: "",
-      ethnicity: "",
-      religion: ""
-    };
+        name: "",
+        description: "",
+        price: 0,
+        imgUrl: [],
+        category: "",
+      };
 
   const form = useForm<StudentFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues,
   });
-
-  console.log("initial data ", initialData)
 
   const onSubmit = async (data: StudentFormValues) => {
     try {
@@ -121,23 +111,20 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
           body: JSON.stringify(data),
           headers: {
             'content-type': 'application/json',
-              //@ts-ignore
+            //@ts-ignore
             Authorization: `Bearer ${session?.user.access_token}`,
           }
         })
-          if(res.ok) {
-              toast({
-                  variant: "default",
-                  title: "Update Successfully.",
-                  description: `Student ${initialData.firstname} updated successfully.`,
-              });
-              router.refresh();
-              router.push(`/dashboard/student`);
-          }
-        // await axios.post(`/api/products/edit-product/${initialData._id}`, data);
+        if(res.ok) {
+          toast({
+            variant: "default",
+            title: "Update Successfully.",
+            description: `Student ${initialData.firstname} updated successfully.`,
+          });
+          router.refresh();
+          router.push(`/dashboard/student`);
+        }
       } else {
-        // const res = await axios.post(`/api/products/create-product`, data);
-        // console.log("product", res);
         data = JSON.parse(JSON.stringify(data))
         console.log("submit data", data)
         // const res = await addStudent(data);
@@ -147,7 +134,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
           body: JSON.stringify(data),
           headers: {
             'content-type': 'application/json',
-              //@ts-ignore
+            //@ts-ignore
             Authorization: `Bearer ${session?.user.access_token}`,
           }
         })
@@ -164,14 +151,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
           router.push(`/dashboard/student`);
         }
       }
-
-      /*toast({
-        variant: "destructive",
-        title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
-      });*/
     } catch (error: any) {
-      console.log("the error ", error.message)
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
@@ -379,16 +359,16 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        defaultMonth={field.value}
-                        captionLayout="dropdown-buttons"
-                        selected={field.value}
+                        // defaultMonth={field.value}
+                        // captionLayout="dropdown-buttons"
+                        // selected={field.value}
                         onSelect={field.onChange}
-                        fromYear={1960}
-                        toYear={2030}
+                        //fromYear={1960}
+                        // toYear={2030}
                         /*disabled={(date) =>
                           date > new Date() || date < new Date("1900-01-01")
                         }*/
-                        initialFocus
+                        // initialFocus
                       />
                     </PopoverContent>
                   </Popover>
@@ -399,7 +379,7 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
                 </FormItem>
               )}
             />
-            <FormField
+            {/*<FormField
               control={form.control}
               name="image"
               render={({ field }) => (
@@ -409,6 +389,23 @@ export const StudentForm: React.FC<StudentFormProps> = ({initialData}) => {
                     <FileUpload
                       onChange={field.onChange}
                       //@ts-ignore
+                      value={field.value}
+                      onRemove={field.onChange}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />*/}
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Images</FormLabel>
+                  <FormControl>
+                    <FileUpload
+                      onChange={field.onChange}
                       value={field.value}
                       onRemove={field.onChange}
                     />

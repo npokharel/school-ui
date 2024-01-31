@@ -8,12 +8,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Student, User } from "@/constants/data";
+import { Student } from "@/constants/data";
 import { Edit, MoreHorizontal, Trash } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
-import {useSession} from "next-auth/react";
-import {useToast} from "@/components/ui/use-toast";
 
 interface CellActionProps {
   data: Student;
@@ -23,31 +21,8 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const params = useParams();
-  const { data: session } = useSession()
-  const { toast } = useToast();
 
-  const onConfirm = async () => {
-    console.log("delete clicked", data.id)
-    setOpen(false)
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/student/${data.id}`,{
-      method: 'DELETE',
-      headers: {
-        'content-type': 'application/json',
-        //@ts-ignore
-        Authorization: `Bearer ${session?.user.access_token}`,
-      }
-    })
-    if (res.ok) {
-      toast({
-        variant: "default",
-        title: "Successfully Deleted",
-        description: `Student record deleted successfully.`,
-      });
-      router.push(`/dashboard/student`);
-      router.refresh();
-    }
-  };
+  const onConfirm = async () => {};
 
   return (
     <>
@@ -68,7 +43,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
           <DropdownMenuItem
-            onClick={() => router.push(`/dashboard/student/${data.id}`)}
+            onClick={() => router.push(`/dashboard/user/${data.id}`)}
           >
             <Edit className="mr-2 h-4 w-4" /> Update
           </DropdownMenuItem>

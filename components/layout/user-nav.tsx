@@ -11,10 +11,9 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSession , signOut} from "next-auth/react"
-
-export default function UserNav() {
-  const { data: session } = useSession()
+import { signOut, useSession } from "next-auth/react";
+export function UserNav() {
+  const { data: session } = useSession();
   if (session) {
     return (
       <DropdownMenu>
@@ -25,7 +24,7 @@ export default function UserNav() {
                 src={session.user?.image ?? "/avatars/user-blue.png"}
                 alt={session.user?.name ?? ""}
               />
-              <AvatarFallback>{session.user?.name}</AvatarFallback>
+              <AvatarFallback>{session.user?.name?.[0]}</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
